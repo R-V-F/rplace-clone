@@ -1,0 +1,34 @@
+#myCanvas {
+    image-rendering:pixelated;
+}
+
+#outer {
+    position:absolute;
+}
+
+#guideRect {
+    position: fixed;
+    width: 39px;
+    height: 39px;
+    background-color: none;
+    // border:1px solid;
+    color:black;
+    top: 0;
+    left: 0;
+}
+
+#ref {
+    caret-color: rgba(255,255,255,0);
+}
+
+#paintbtn {
+    position: fixed;
+    width: 39px;
+    height: 39px;
+    background-color: purple;
+    border:1px solid;
+    color:black;
+    top: 110px;
+    left: 110px;
+
+}
