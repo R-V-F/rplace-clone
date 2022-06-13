@@ -236,7 +236,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
       
       let x = Math.round((div!.offsetLeft * -1 + document.documentElement.clientWidth * 0.5) / this.scale);
       let y = Math.round((div!.offsetTop * -1 + document.documentElement.clientHeight * 0.5) / this.scale);
-      console.log(`x = ${x}, div.offsetLeft = ${div!.offsetLeft * -1}, w/2 = ${document.documentElement.clientWidth * 0.5}  | y = ${y} , offsetTop = ${div!.offsetLeft * -1}, h/2 = ${document.documentElement.clientHeight * 0.5} `);
       ctx.fillStyle = 'purple';
       ctx.fillRect(x,y,1,1);
       
