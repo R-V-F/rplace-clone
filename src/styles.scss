@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 html {
-    background-color: purple;
+    background: linear-gradient(to top right, #060628, #1F245A, #682359);
     margin: 0;
     padding: 0;
     height: auto;
@@ -13,3 +13,5 @@ body {
     width: auto;
     
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
