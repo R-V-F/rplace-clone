@@ -8,13 +8,14 @@
 
 #guideRect {
     position: fixed;
-    width: 39px;
-    height: 39px;
+    width: 119px;
+    height: 119px;
     background-color: none;
     // border:1px solid;
     color:black;
     top: 0;
     left: 0;
+    pointer-events: none;
 }
 
 #ref {

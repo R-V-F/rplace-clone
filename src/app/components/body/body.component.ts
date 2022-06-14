@@ -191,13 +191,13 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
       div.style.transform = `scale(${this.scale})`;
       div.style.transformOrigin = `top left`;
-      div.style.top = this.top + 'px';    // Position Top Right (0,0) in the midle of
-      div.style.left = this.left + 'px';  // the window.
+      // div.style.top = this.top + 'px';    // Position Top Right (0,0) in the midle of
+      // div.style.left = this.left + 'px';  // the window.
 
       this.top += -1 * Math.floor(clickPos.y) * this.scale;
       this.left += -1 * Math.floor(clickPos.x) * this.scale;
 
-      console.log(`out of paintMode: this.top = ${this.top}, this.left${this.left}`);
+      // console.log(`out of paintMode: this.top = ${this.top}, this.left${this.left}`);
 
       div.style.top = this.top + 'px';  
       div.style.left = this.left  + 'px';
@@ -237,7 +237,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
       let x = Math.round((div!.offsetLeft * -1 + document.documentElement.clientWidth * 0.5) / this.scale);
       let y = Math.round((div!.offsetTop * -1 + document.documentElement.clientHeight * 0.5) / this.scale);
       ctx.fillStyle = 'purple';
-      ctx.fillRect(x,y,1,1);
+      ctx.fillRect(x,y,3,3);
       
     }
   }
@@ -265,4 +265,18 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
 
 }
+
+/**
+ * To change guideRect size:
+ *  - adjust guideRect width and height to (brush_size * 40) - 1
+ *  - on paintTile() => fillRect(x,y,brush_size,brush_size)
+ * 
+ * 
+ * 
+ * 
+ * TODO:
+ * # Floating Menu for brushes
+ * # Fix scroll during paint mode
+ * 
+ */
 
