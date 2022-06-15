@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
+import { Component, OnInit, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'app-brushes',
@@ -16,6 +15,8 @@ export class BrushesComponent implements OnInit {
   pos3 = 0;
   pos4 = 0;
 
+  @Output() brushSize = new EventEmitter<any>();
+
   constructor() { }
 
   ngOnInit(): void {
@@ -24,35 +25,31 @@ export class BrushesComponent implements OnInit {
 
     btn?.addEventListener('mousedown',(e:any)=> {
       this.pressed = true;
-      console.log(`top: ${btn!.offsetTop}, left: ${btn!.offsetLeft}`);
       this.pos3 = e.clientX;
       this.pos4 = e.clientY;
     });
 
-    btn?.addEventListener('mousemove',(e:any)=> {
+    window.addEventListener('mousemove',(e:any)=> {
       
-      if(this.pressed) {
+      if(this.pressed) { // Drag algo
         this.pos1 = this.pos3 - e.clientX;
         this.pos2 = this.pos4 - e.clientY;
         this.pos3 = e.clientX;
         this.pos4 = e.clientY;
-        console.log(`top: ${btn!.offsetTop}, left: ${btn!.offsetLeft}`);
+
 
         console.log(`X: ${e.clientX}, Y: ${e.clientY}`);
         console.log(`this.pos2: ${this.pos2}`);
 
         btn!.style.top = (btn!.offsetTop - this.pos2) + "px";
         btn!.style.left = (btn!.offsetLeft - this.pos1) + "px";
-
-        console.log(`top: ${btn!.offsetTop}, left: ${btn!.offsetLeft}`);
       }
     });
 
     btn?.addEventListener('mouseup',()=> {
       this.pressed = false;
-      console.log(`top: ${btn!.offsetTop}, left: ${btn!.offsetLeft}`);
     });
-    
+  
 
 
   }
@@ -71,6 +68,10 @@ export class BrushesComponent implements OnInit {
     }
     
 
+  }
+
+  changeBrushSize(size:any) {
+    this.brushSize.emit(size);
   }
 
 }

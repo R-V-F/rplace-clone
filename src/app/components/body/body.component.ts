@@ -31,6 +31,9 @@ export class BodyComponent implements OnInit, AfterViewInit {
   topg = 0;
   leftg = 0;
 
+  //Brush Size from childs component
+  brush_size_parent = 1;
+
 
   constructor() { 
   }
@@ -137,17 +140,13 @@ export class BodyComponent implements OnInit, AfterViewInit {
     });
 
     window.addEventListener('keypress', (e:any) => {
-      console.log(e.key);
       if(e.key == ' ') {
         this.paintTile();
       }
     });
     window.addEventListener('keydown', (e:any) =>{
       if(e.key == 'Escape') {
-        console.log(`offsetTop = ${div!.offsetTop}, offsetLeft = ${div!.offsetLeft}`);
         this.leavePaintMode();
-        console.log(`offsetTop = ${div!.offsetTop}, offsetLeft = ${div!.offsetLeft}`);
-
       }
     });
     
@@ -194,8 +193,8 @@ export class BodyComponent implements OnInit, AfterViewInit {
       // div.style.top = this.top + 'px';    // Position Top Right (0,0) in the midle of
       // div.style.left = this.left + 'px';  // the window.
 
-      this.top += -1 * Math.floor(clickPos.y) * this.scale;
-      this.left += -1 * Math.floor(clickPos.x) * this.scale;
+      this.top += -1 * Math.round(clickPos.y) * this.scale;
+      this.left += -1 * Math.round(clickPos.x) * this.scale;
 
       // console.log(`out of paintMode: this.top = ${this.top}, this.left${this.left}`);
 
@@ -206,24 +205,28 @@ export class BodyComponent implements OnInit, AfterViewInit {
     
   }
 
+  /**
+   * 
+   * @param x 
+   * @param y 
+   */
   dragGuideOnPaintMode(x:any, y:any) {
     const divg = document.getElementById('guideRect');
-    console.log(`x,cx = ${x},${this.cx}, y = ${y}`);
-    if(x - this.cx > 20) {
+    if(x - this.cx > this.scale/2) { //amount moved - the moment paint mode went true
       // <-  
-      divg!.style.left = -40 + this.leftg + "px";
+      divg!.style.left = -this.scale + this.leftg + "px";
     }
-    else if(x - this.cx < -20) {
+    else if(x - this.cx < -this.scale/2) {
       // ->
-      divg!.style.left = +40 + this.leftg + "px";
+      divg!.style.left = +this.scale + this.leftg + "px";
     }
-    else if(y - this.cy > 20) {
+    else if(y - this.cy > this.scale/2) {
       // V
-      divg!.style.top = -40 + this.topg + "px";
+      divg!.style.top = -this.scale + this.topg + "px";
     }
-    else if(y - this.cy < -20) {
+    else if(y - this.cy < -this.scale/2) {
       // ^
-      divg!.style.top = +40 + this.topg + "px";
+      divg!.style.top = +this.scale + this.topg + "px";
     }
   }
 
@@ -231,13 +234,14 @@ export class BodyComponent implements OnInit, AfterViewInit {
     const div = document.getElementById('outer');
     const canvas : any = document.getElementById('myCanvas');
     let ctx = canvas.getContext('2d');
+    const divg = document.getElementById('guideRect');
 
     if(this.paintMode) {
       
-      let x = Math.round((div!.offsetLeft * -1 + document.documentElement.clientWidth * 0.5) / this.scale);
-      let y = Math.round((div!.offsetTop * -1 + document.documentElement.clientHeight * 0.5) / this.scale);
+      let x = Math.round(((div!.offsetLeft * -1 + document.documentElement.clientWidth * 0.5) / this.scale) - ((this.brush_size_parent))/2);
+      let y = Math.round(((div!.offsetTop * -1 + document.documentElement.clientHeight * 0.5) / this.scale) - ((this.brush_size_parent))/2);
       ctx.fillStyle = 'purple';
-      ctx.fillRect(x,y,3,3);
+      ctx.fillRect(x,y,this.brush_size_parent,this.brush_size_parent);
       
     }
   }
@@ -255,28 +259,50 @@ export class BodyComponent implements OnInit, AfterViewInit {
       
       div!.style.transform = 'scale(1)';
 
-      divg!.style.top = document.documentElement.clientHeight * 0.5 + 'px';
-      divg!.style.left = document.documentElement.clientWidth * 0.5 + 'px';
+      divg!.style.top = document.documentElement.clientHeight * 0.5 - (this.brush_size_parent * this.scale/2) + 'px';
+      divg!.style.left = document.documentElement.clientWidth * 0.5 - (this.brush_size_parent * this.scale/2) + 'px';
       
       
 
     }   
   }
 
+  adjustGuideRectSize(size:any) {
+    const divg = document.getElementById('guideRect');
+    divg!.style.top = Math.round(document.documentElement.clientHeight * 0.5) + 'px';
+    divg!.style.left = Math.round(document.documentElement.clientWidth * 0.5) + 'px';
+    let x = divg!.offsetLeft;
+    let y = divg!.offsetTop;
+    divg!.style.width = `${size}px`;
+    divg!.style.height = `${size}px`;
+    console.log(`before: divg!.offsetTop = ${divg!.offsetTop} || divg!.offsetLeft = ${divg!.offsetLeft},
+    x = ${x} || y = ${y}, size*this.scale/2 = ${size*this.scale/2}`);
+    divg!.style.top = Math.round(y - (size/2)) + "px";
+    divg!.style.left = Math.round(x - (size/2)) + "px";
+    this.cx = divg!.offsetLeft;
+    this.cy = divg!.offsetTop;
+    console.log(`after: divg!.offsetTop = ${divg!.offsetTop} || divg!.offsetLeft = ${divg!.offsetLeft},
+    x = ${x} || y = ${y}, size*this.scale/2 = ${size*this.scale/2}`);
+
+  }
+
+  getBrushSize(size:any) {
+    this.brush_size_parent = size;
+    this.adjustGuideRectSize(size*this.scale - 1);
+    console.log(`b size:${this.brush_size_parent}`);
+  }
+
 
 }
 
 /**
- * To change guideRect size:
- *  - adjust guideRect width and height to (brush_size * 40) - 1
- *  - on paintTile() => fillRect(x,y,brush_size,brush_size)
- * 
- * 
  * 
  * 
  * TODO:
- * # Floating Menu for brushes
- * # Fix scroll during paint mode
- * 
+ * # Align Painting => Odd numbers are always off by 20px (half scale)
+ * #                => Even numbers off by a few pixels, might aply to odds too
+ * # Speed up guideRect when dragging -> It's taking a lot of time for the guide to catch up
+ * # cx, cy => maybe change to initial_x, initial_y or natural_x, natural_y
+ * # topg and leftg => guide_y_delta, guide_x_delta
  */
 

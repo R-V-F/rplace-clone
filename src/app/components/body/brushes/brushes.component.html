@@ -1,7 +1,18 @@
 
-<button mat-fab id="brushes-btn"> Basic
-    <div id="brushes-menu">
-
+<button mat-fab id="brushes-btn" (click)="toggleBrushes()"> Brushes
+    <div id="brushes-menu" class="mat-elevation-z4">
+        <span *ngIf="toggled == true">
+            <div class="size-btn first" (click)="changeBrushSize(1)">1px x 1px</div>
+            <div class="size-btn" (click)="changeBrushSize(2)">2px x 2px</div>
+            <div class="size-btn" (click)="changeBrushSize(3)">3px x 3px</div>
+            <div class="size-btn" (click)="changeBrushSize(4)">4px x 4px</div>
+            <div class="size-btn" (click)="changeBrushSize(5)">5px x 5px</div>
+            <div class="size-btn" (click)="changeBrushSize(6)">6px x 6px</div>
+            <div class="size-btn" (click)="changeBrushSize(7)">7px x 7px</div>
+            <div class="size-btn" (click)="changeBrushSize(8)">8px x 8px</div>
+            <div class="size-btn" (click)="changeBrushSize(9)">9px x 9px</div>
+            <div class="size-btn last" (click)="changeBrushSize(10)">10px x 10px</div>
+        </span>
     </div>
 </button>
 
