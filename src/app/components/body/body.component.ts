@@ -1,4 +1,5 @@
 
+import { style } from '@angular/animations';
 import { AfterViewInit, Component, OnInit, ɵɵsetComponentScope } from '@angular/core';
 
 
@@ -238,8 +239,20 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
     if(this.paintMode) {
       
+      /**
+       * div.offsetLeft/Top => distance between the left/top side of the view port and the left/top
+       * side of the screen (times -1).
+       * 
+       * document.documentElement.clientWidth/Height => view port width/height
+       * 
+       * 
+       *   
+       */
+
       let x = Math.round(((div!.offsetLeft * -1 + document.documentElement.clientWidth * 0.5) / this.scale) - ((this.brush_size_parent))/2);
       let y = Math.round(((div!.offsetTop * -1 + document.documentElement.clientHeight * 0.5) / this.scale) - ((this.brush_size_parent))/2);
+      console.log(`paint* document.documentElement.clientWidth = ${document.documentElement.clientWidth}`);
+      
       ctx.fillStyle = 'purple';
       ctx.fillRect(x,y,this.brush_size_parent,this.brush_size_parent);
       
@@ -269,26 +282,78 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   adjustGuideRectSize(size:any) {
     const divg = document.getElementById('guideRect');
-    divg!.style.top = Math.round(document.documentElement.clientHeight * 0.5) + 'px';
-    divg!.style.left = Math.round(document.documentElement.clientWidth * 0.5) + 'px';
-    let x = divg!.offsetLeft;
-    let y = divg!.offsetTop;
-    divg!.style.width = `${size}px`;
-    divg!.style.height = `${size}px`;
-    console.log(`before: divg!.offsetTop = ${divg!.offsetTop} || divg!.offsetLeft = ${divg!.offsetLeft},
-    x = ${x} || y = ${y}, size*this.scale/2 = ${size*this.scale/2}`);
-    divg!.style.top = Math.round(y - (size/2)) + "px";
-    divg!.style.left = Math.round(x - (size/2)) + "px";
+    const div = document.getElementById("outer");
+
+    //Coordinates for the midle of the screen relative to the viewport
+    let view_top = Math.round(document.documentElement.clientHeight * 0.5);
+    let view_left = Math.round(document.documentElement.clientWidth * 0.5);
+
+    //Coordinates for the midle of the screen relative to the viewport
+    let mid_top = div!.offsetTop * -1 + view_top;
+    let mid_left = div!.offsetLeft * -1 + view_left;
+
+    //Set mid_top and mid_left to the nearest interesection
+    if((mid_top % this.scale) >= this.scale/2) { //half bottom of the 40x40 square
+      mid_top += mid_top % this.scale;
+    }
+    else if((mid_top % this.scale) < this.scale/2) {
+      mid_top -= mid_top % this.scale;
+    }
+
+    if((mid_left % this.scale) >= this.scale/2) { //half right of the 40x40 square
+      mid_left += mid_left % this.scale;
+    }
+    else if((mid_left % this.scale) < this.scale/2) {
+      mid_left -= mid_left % this.scale;
+    }
+
+    //Adjust mid_top and mid_left depending on the brush_size
+    if((this.brush_size_parent % 2) == 0) { //If it's an even size brush, offset by half the size of the brush
+      mid_top -= (this.brush_size_parent/2) * this.scale;
+      mid_left -= (this.brush_size_parent/2) * this.scale;
+    }
+    else { //top right always bigger
+      mid_top -= Math.floor(this.brush_size_parent/2) * this.scale;
+      mid_left -= Math.floor(this.brush_size_parent/2) * this.scale;
+    }
+
+    //Guide size
+    divg!.style.width = `${size - 1}px`;
+    divg!.style.height = `${size - 1}px`;
+
+    //Guide pos
+    let guide_top = 0;
+    let guide_left = 0;
+    if(((mid_top - div!.offsetTop*-1) % this.scale) <= this.scale) {
+      guide_top = (mid_top - div!.offsetTop*-1) - ((mid_top - div!.offsetTop*-1) % this.scale);
+    }
+    else {
+      guide_top = (mid_top - div!.offsetTop*-1) + ((mid_top - div!.offsetTop*-1) % this.scale);
+    }
+
+    if(((mid_left - div!.offsetLeft*-1) % this.scale) <= this.scale) {
+      console.log(`guide_left = ${(mid_left - div!.offsetLeft*-1)} - ${((mid_left - div!.offsetLeft*-1) % this.scale)}`);
+      guide_left = (mid_left - div!.offsetLeft*-1) - ((mid_left - div!.offsetLeft*-1) % this.scale);
+    }
+    else {
+      console.log(`guide_left = ${(mid_left - div!.offsetLeft*-1)} + ${((mid_left - div!.offsetLeft*-1) % this.scale)}`);
+      guide_left = (mid_left - div!.offsetLeft*-1) + ((mid_left - div!.offsetLeft*-1) % this.scale);
+    }
+    
+    divg!.style.top = `${guide_top}px`;
+    divg!.style.left = `${guide_left}px`;
+    console.log(`guide_top = ${guide_top}, guide_left = ${guide_left}`);
+;
+
+    //Initial values of bx and cy updated 
     this.cx = divg!.offsetLeft;
     this.cy = divg!.offsetTop;
-    console.log(`after: divg!.offsetTop = ${divg!.offsetTop} || divg!.offsetLeft = ${divg!.offsetLeft},
-    x = ${x} || y = ${y}, size*this.scale/2 = ${size*this.scale/2}`);
 
   }
 
   getBrushSize(size:any) {
     this.brush_size_parent = size;
-    this.adjustGuideRectSize(size*this.scale - 1);
+    this.adjustGuideRectSize(size*this.scale);
     console.log(`b size:${this.brush_size_parent}`);
   }
 
@@ -304,5 +369,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
  * # Speed up guideRect when dragging -> It's taking a lot of time for the guide to catch up
  * # cx, cy => maybe change to initial_x, initial_y or natural_x, natural_y
  * # topg and leftg => guide_y_delta, guide_x_delta
+ * w
  */
 
