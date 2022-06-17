@@ -1,6 +1,5 @@
 
-import { style } from '@angular/animations';
-import { AfterViewInit, Component, OnInit, ɵɵsetComponentScope } from '@angular/core';
+import { AfterViewInit, Component, OnInit} from '@angular/core';
 
 
 @Component({
@@ -10,7 +9,7 @@ import { AfterViewInit, Component, OnInit, ɵɵsetComponentScope } from '@angula
 })
 export class BodyComponent implements OnInit, AfterViewInit {
 
-  scale:number = 1; //tracks current scale applied
+  scale:number = 40; //tracks current scale applied
 
   pos1 = 0; // Tracks outer div positions
   pos2 = 0;
@@ -20,8 +19,11 @@ export class BodyComponent implements OnInit, AfterViewInit {
   cx = 0; // divg offsetTop and offsetLeft when
   cy = 0; // paint mode is entered.
 
+  paint_x = 0; // painting top left coordinates
+  paint_y = 0;
 
-  //Behaviour State
+
+  //Initial behaviour states
   paintMode = false;
 
   //Canvas placement
@@ -32,7 +34,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
   topg = 0;
   leftg = 0;
 
-  //Brush Size from childs component
+  //Initial Brush Size
   brush_size_parent = 1;
 
 
@@ -173,34 +175,29 @@ export class BodyComponent implements OnInit, AfterViewInit {
     const div = document.getElementById('outer');
     const divg = document.getElementById('guideRect');
     const canvas : any = document.getElementById('myCanvas');
-    this.scale = 40;
     let clickPos = this.getMousePos(canvas,e);
 
+    // Makes Guide rect visible
     divg!.style.border = '1px solid';
 
-    this.cx = divg!.offsetLeft;
+    this.cx = divg!.offsetLeft; // Updates initial guide rect position
     this.cy = divg!.offsetTop;
 
     if(div?.style != undefined) {
-      this.top = 0;
-      this.left = 0;
+      div.style.transform = `scale(${this.scale})`; // Makes the top left of the canvas go towards the top left of the view
+      div.style.transformOrigin = `top left`; // -> (0,0) becomes the left top corner. Increment to move top/right.
 
-      this.left += document.documentElement.clientWidth * 0.5;
-
-      this.top += document.documentElement.clientHeight * 0.5;
-
-      div.style.transform = `scale(${this.scale})`;
-      div.style.transformOrigin = `top left`;
-      // div.style.top = this.top + 'px';    // Position Top Right (0,0) in the midle of
-      // div.style.left = this.left + 'px';  // the window.
-
+      // Setup to position canvas/view on the clicked tile
+      this.left = document.documentElement.clientWidth * 0.5;
+      this.top = document.documentElement.clientHeight * 0.5;
       this.top += -1 * Math.round(clickPos.y) * this.scale;
       this.left += -1 * Math.round(clickPos.x) * this.scale;
 
-      // console.log(`out of paintMode: this.top = ${this.top}, this.left${this.left}`);
-
       div.style.top = this.top + 'px';  
       div.style.left = this.left  + 'px';
+
+      // Get initial paint_x and paint_y
+      this.adjustGuideRectSize(this.brush_size_parent*this.scale);
             
     }
     
@@ -213,49 +210,35 @@ export class BodyComponent implements OnInit, AfterViewInit {
    */
   dragGuideOnPaintMode(x:any, y:any) {
     const divg = document.getElementById('guideRect');
-    if(x - this.cx > this.scale/2) { //amount moved - the moment paint mode went true
+    if(x - this.cx > this.scale/2) {
       // <-  
       divg!.style.left = -this.scale + this.leftg + "px";
+      this.paint_x -= 1;
     }
     else if(x - this.cx < -this.scale/2) {
       // ->
       divg!.style.left = +this.scale + this.leftg + "px";
+      this.paint_x += 1;
     }
     if(y - this.cy > this.scale/2) {
       // V
       divg!.style.top = -this.scale + this.topg + "px";
+      this.paint_y -= 1;
     }
     else if(y - this.cy < -this.scale/2) {
       // ^
       divg!.style.top = +this.scale + this.topg + "px";
+      this.paint_y += 1;
     }
   }
 
   paintTile() {
-    const div = document.getElementById('outer');
     const canvas : any = document.getElementById('myCanvas');
     let ctx = canvas.getContext('2d');
-    const divg = document.getElementById('guideRect');
 
     if(this.paintMode) {
-      
-      /**
-       * div.offsetLeft/Top => distance between the left/top side of the view port and the left/top
-       * side of the screen (times -1).
-       * 
-       * document.documentElement.clientWidth/Height => view port width/height
-       * 
-       * 
-       *   
-       */
-
-      let x = Math.round(((div!.offsetLeft * -1 + document.documentElement.clientWidth * 0.5) / this.scale) - ((this.brush_size_parent))/2);
-      let y = Math.round(((div!.offsetTop * -1 + document.documentElement.clientHeight * 0.5) / this.scale) - ((this.brush_size_parent))/2);
-      console.log(`paint* document.documentElement.clientWidth = ${document.documentElement.clientWidth}`);
-      
-      ctx.fillStyle = 'purple';
-      ctx.fillRect(x,y,this.brush_size_parent,this.brush_size_parent);
-      
+      ctx.fillStyle = 'purple'; //**Change this -> color pallet
+      ctx.fillRect(this.paint_x,this.paint_y,this.brush_size_parent,this.brush_size_parent);
     }
   }
 
@@ -271,11 +254,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
       div!.style.top = '0px';
       
       div!.style.transform = 'scale(1)';
-
-      divg!.style.top = document.documentElement.clientHeight * 0.5 - (this.brush_size_parent * this.scale/2) + 'px';
-      divg!.style.left = document.documentElement.clientWidth * 0.5 - (this.brush_size_parent * this.scale/2) + 'px';
-      
-      
 
     }   
   }
@@ -305,15 +283,14 @@ export class BodyComponent implements OnInit, AfterViewInit {
     }
     else if((mid_left % this.scale) < this.scale/2) {
       mid_left -=(mid_left % this.scale);
-    }
-    //(mid_left,mid_top) -> coordinates for the nearest intersection from the midle of the screen
+    } //(mid_left,mid_top) -> coordinates for the nearest intersection from the midle of the screen
 
     //Adjust mid_top and mid_left depending on the brush_size
     if((this.brush_size_parent % 2) == 0) { //If it's an even size brush, offset by half the size of the brush
       mid_top -= (this.brush_size_parent/2) * this.scale;
       mid_left -= (this.brush_size_parent/2) * this.scale;
     }
-    else { //top right always bigger
+    else { // Top right always bigger
       mid_top -= Math.floor(this.brush_size_parent/2) * this.scale;
       mid_left -= Math.floor(this.brush_size_parent/2) * this.scale;
     }
@@ -333,6 +310,10 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.cx = divg!.offsetLeft;
     this.cy = divg!.offsetTop;
 
+    //Paint coordinates update
+    this.paint_y = mid_top/this.scale;
+    this.paint_x = mid_left/this.scale;
+
   }
 
   getBrushSize(size:any) {
@@ -340,17 +321,12 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.adjustGuideRectSize(size*this.scale);
   }
 
-
 }
 
 /**
- * 
- * 
  * TODO:
- * # cx, cy => maybe change to initial_x, initial_y or natural_x, natural_y
- * # topg and leftg => guide_y_delta, guide_x_delta
- * 
- * # Align painting with guide positioning
+ * # Fix button + style brush menu
+ * # -> stop the expansion when moving the btn
  * # Add color pallet
  */
 
