@@ -1,0 +1,14 @@
+#palette-btn {
+    position:absolute;
+    top:10%;
+    left:70%;
+    padding: 0;
+    background-color: red;
+}
+
+#palette-canvas {
+    position:absolute;
+    pointer-events: none;
+    top:-125px;
+    left:-250px;
+}

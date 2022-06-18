@@ -24,7 +24,6 @@ export class BrushesComponent implements OnInit {
 
   ngOnInit(): void {
     const btn = document.getElementById("brushes-btn");
-    const menu = document.getElementById("brushes-menu");
 
     btn?.addEventListener('mousedown',(e:any)=> {
       this.pressed = true;

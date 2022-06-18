@@ -22,6 +22,8 @@ export class BodyComponent implements OnInit, AfterViewInit {
   paint_x = 0; // painting top left coordinates
   paint_y = 0;
 
+  color = 'blue';
+
 
   //Initial behaviour states
   paintMode = false;
@@ -234,10 +236,10 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   paintTile() {
     const canvas : any = document.getElementById('myCanvas');
-    let ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
 
     if(this.paintMode) {
-      ctx.fillStyle = 'purple'; //**Change this -> color pallet
+      ctx.fillStyle = this.color; //**Change this -> color pallet
       ctx.fillRect(this.paint_x,this.paint_y,this.brush_size_parent,this.brush_size_parent);
     }
   }
@@ -319,6 +321,10 @@ export class BodyComponent implements OnInit, AfterViewInit {
   getBrushSize(size:any) {
     this.brush_size_parent = size;
     this.adjustGuideRectSize(size*this.scale);
+  }
+
+  getColor(color:any) {
+    this.color = color;
   }
 
 }

@@ -8,13 +8,15 @@ import { BodyComponent } from './components/body/body.component';
 import { BrushesComponent } from './components/body/brushes/brushes.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
+import { PaletteComponent } from './components/body/palette/palette.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     BodyComponent,
-    BrushesComponent
+    BrushesComponent,
+    PaletteComponent
   ],
   imports: [
     BrowserModule,
