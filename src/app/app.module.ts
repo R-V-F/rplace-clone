@@ -9,6 +9,8 @@ import { BrushesComponent } from './components/body/brushes/brushes.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import { PaletteComponent } from './components/body/palette/palette.component';
+import { LoadComponent } from './components/body/load/load.component';
+import { SaveComponent } from './components/body/save/save.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { PaletteComponent } from './components/body/palette/palette.component';
     HeaderComponent,
     BodyComponent,
     BrushesComponent,
-    PaletteComponent
+    PaletteComponent,
+    LoadComponent,
+    SaveComponent
   ],
   imports: [
     BrowserModule,

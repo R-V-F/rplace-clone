@@ -331,8 +331,9 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
 /**
  * TODO:
- * # Fix button + style brush menu
- * # -> stop the expansion when moving the btn
- * # Add color pallet
+ * # Load/Save btn
+ * # Animate btns
+ * # Adapt mobile
+ * ## Start Backend
  */
 
