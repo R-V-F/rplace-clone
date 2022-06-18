@@ -24,6 +24,7 @@ export class PaletteComponent implements OnInit {
     const canvas : any = document.getElementById('palette-canvas');
     const ctx = canvas.getContext('2d');
     const btn = document.getElementById('palette-btn');
+    const icon = document.getElementById('brush-icon');
     let pos;
 
     btn?.addEventListener('mousedown',(e:any)=> {
@@ -65,6 +66,15 @@ export class PaletteComponent implements OnInit {
         this.tileColor.emit(`rgb(${rgb[0]},${rgb[1]},${rgb[2]})`);
       }
     });
+
+    btn?.addEventListener('mouseover', ()=>{
+      icon!.style.transform = `scale(1.3,1.3) rotate(-30deg)`;
+    });
+
+    btn?.addEventListener('mouseout', ()=>{
+      icon!.style.transform = `scale(1,1) rotate(0deg)`;
+    });
+
   }
 
   togglePalette() {
