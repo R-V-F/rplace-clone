@@ -2,7 +2,12 @@
     position: absolute;
     top:70%;
     left:70%;
+    transition: transform .4s ease-in-out;
 } 
+
+#brushes-btn:hover {
+    transform: scale(1.15);
+}
 
 .brushes-menu {
     position: absolute;
