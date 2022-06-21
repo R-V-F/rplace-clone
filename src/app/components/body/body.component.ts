@@ -80,16 +80,30 @@ export class BodyComponent implements OnInit, AfterViewInit {
     //Wheel zoom
     canvas.addEventListener("wheel",(e:any)=>{
       e.preventDefault();
+      console.log(`${e.deltaY}`);
 
-      this.scale += e.deltaY * -0.005;
-    
-      // Restrict scale
-      this.scale = Math.max(this.scale, 0.5);
-    
-      // Apply scale transform
       const div = document.getElementById('outer');
       if(div?.style.transform != undefined) {
-        div.style.transform = `scale(${this.scale}, ${this.scale})`;
+        //div.style.transform = `scale(${this.scale}, ${this.scale})`;
+        if(this.paintMode && e.deltaY > 0) {
+          console.log(`1`);
+          this.scale = 10;
+          div.style.transformOrigin = `top left`;
+          div.style.transform = `scale(${this.scale})`;
+
+
+          div.style.top = `0px`; //adjust these values to keep divg centered
+          div.style.left = `0px`;
+        }
+        else if(this.paintMode && e.deltaY < 0){
+          console.log(`2`);
+          this.scale = 40;
+          div.style.transformOrigin = `top left`;
+          div.style.transform = `scale(${this.scale}, ${this.scale})`;
+
+          div.style.top = `0px`; //adjust these values to keep divg centered
+          div.style.left = `0px`;
+        }
       }
 
     });
@@ -331,8 +345,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
 /**
  * TODO:
- * # Load/Save btn
- * # Animate btns
  * # Adapt mobile
  * ## Start Backend
  */
