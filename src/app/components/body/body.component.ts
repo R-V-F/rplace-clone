@@ -24,6 +24,8 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   color = 'blue';
 
+  clickPos = {x:0,y:0};
+
 
   //Initial behaviour states
   paintMode = false;
@@ -84,25 +86,23 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
       const div = document.getElementById('outer');
       if(div?.style.transform != undefined) {
-        //div.style.transform = `scale(${this.scale}, ${this.scale})`;
         if(this.paintMode && e.deltaY > 0) {
-          console.log(`1`);
-          this.scale = 10;
-          div.style.transformOrigin = `top left`;
+          this.scale = 4;
           div.style.transform = `scale(${this.scale})`;
+          div.style.transformOrigin = `top left`;
 
-
-          div.style.top = `0px`; //adjust these values to keep divg centered
-          div.style.left = `0px`;
+          // Same formula used to enter paintMode
+          div.style.top = `${(this.clickPos.y * -this.scale) + (document.documentElement.clientHeight * 0.5)}px`;
+          div.style.left = `${(this.clickPos.x * -this.scale) + (document.documentElement.clientWidth * 0.5)}px`;
         }
         else if(this.paintMode && e.deltaY < 0){
-          console.log(`2`);
           this.scale = 40;
           div.style.transformOrigin = `top left`;
           div.style.transform = `scale(${this.scale}, ${this.scale})`;
 
-          div.style.top = `0px`; //adjust these values to keep divg centered
-          div.style.left = `0px`;
+          // Same formula used to enter paintMode
+          div.style.top = `${(this.clickPos.y * -this.scale) + (document.documentElement.clientHeight * 0.5)}px`;
+          div.style.left = `${(this.clickPos.x * -this.scale) + (document.documentElement.clientWidth * 0.5)}px`;
         }
       }
 
@@ -191,7 +191,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
     const div = document.getElementById('outer');
     const divg = document.getElementById('guideRect');
     const canvas : any = document.getElementById('myCanvas');
-    let clickPos = this.getMousePos(canvas,e);
+    this.clickPos = this.getMousePos(canvas,e);
 
     // Makes Guide rect visible
     divg!.style.border = '1px solid';
@@ -206,8 +206,8 @@ export class BodyComponent implements OnInit, AfterViewInit {
       // Setup to position canvas/view on the clicked tile
       this.left = document.documentElement.clientWidth * 0.5;
       this.top = document.documentElement.clientHeight * 0.5;
-      this.top += -1 * Math.round(clickPos.y) * this.scale;
-      this.left += -1 * Math.round(clickPos.x) * this.scale;
+      this.top += -1 * Math.round(this.clickPos.y) * this.scale;
+      this.left += -1 * Math.round(this.clickPos.x) * this.scale;
 
       div.style.top = this.top + 'px';  
       div.style.left = this.left  + 'px';
