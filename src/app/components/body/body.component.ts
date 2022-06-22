@@ -87,13 +87,14 @@ export class BodyComponent implements OnInit, AfterViewInit {
       const div = document.getElementById('outer');
       if(div?.style.transform != undefined) {
         if(this.paintMode && e.deltaY > 0) {
-          this.scale = 4;
-          div.style.transform = `scale(${this.scale})`;
-          div.style.transformOrigin = `top left`;
+          // this.scale = 4;
+          // div.style.transform = `scale(${this.scale})`;
+          // div.style.transformOrigin = `top left`;
 
-          // Same formula used to enter paintMode
-          div.style.top = `${(this.clickPos.y * -this.scale) + (document.documentElement.clientHeight * 0.5)}px`;
-          div.style.left = `${(this.clickPos.x * -this.scale) + (document.documentElement.clientWidth * 0.5)}px`;
+          // // Same formula used to enter paintMode
+          // div.style.top = `${(this.clickPos.y * -this.scale) + (document.documentElement.clientHeight * 0.5)}px`;
+          // div.style.left = `${(this.clickPos.x * -this.scale) + (document.documentElement.clientWidth * 0.5)}px`;
+          this.leavePaintMode();
         }
         else if(this.paintMode && e.deltaY < 0){
           this.scale = 40;
