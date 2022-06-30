@@ -11,6 +11,17 @@ import {MatButtonModule} from '@angular/material/button';
 import { PaletteComponent } from './components/body/palette/palette.component';
 import { LoadComponent } from './components/body/load/load.component';
 import { SaveComponent } from './components/body/save/save.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAXaFZfApG_7fgC1R4eEe2qv1MdFEJOLvw",
+  authDomain: "dotcanvas-b2cb6.firebaseapp.com",
+  projectId: "dotcanvas-b2cb6",
+  storageBucket: "dotcanvas-b2cb6.appspot.com",
+  messagingSenderId: "17330917183",
+  appId: "1:17330917183:web:3f19c6cb457970ef8f4d8a"
+};
 
 @NgModule({
   declarations: [
@@ -27,7 +38,9 @@ import { SaveComponent } from './components/body/save/save.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireAuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

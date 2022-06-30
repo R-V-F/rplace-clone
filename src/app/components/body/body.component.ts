@@ -1,5 +1,7 @@
 
 import { AfterViewInit, Component, OnInit} from '@angular/core';
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 
 @Component({
