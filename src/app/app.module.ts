@@ -13,6 +13,8 @@ import { LoadComponent } from './components/body/load/load.component';
 import { SaveComponent } from './components/body/save/save.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { environment } from '../environments/environment';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXaFZfApG_7fgC1R4eEe2qv1MdFEJOLvw",
@@ -39,10 +41,11 @@ const firebaseConfig = {
     BrowserAnimationsModule,
     MatButtonModule,
     MatIconModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
