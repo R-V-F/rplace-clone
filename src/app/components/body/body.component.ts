@@ -1,6 +1,7 @@
 
 import { AfterViewInit, Component, OnInit} from '@angular/core';
-import { initializeApp } from "firebase/app";
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import firebase from 'firebase/compat/app';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 
@@ -43,13 +44,22 @@ export class BodyComponent implements OnInit, AfterViewInit {
   //Initial Brush Size
   brush_size_parent = 1;
 
+  //Check Login
+  isLogged:boolean = false;
 
-  constructor() { 
+
+  constructor(public auth: AngularFireAuth) { 
   }
+  
 
   
 
   ngOnInit(): void {
+    this.auth.onAuthStateChanged((user) => {
+      if(user) this.isLogged = true;
+      else this.isLogged = false;
+    });
+
     let img = new Image();
     img.onload = function() {
       ctx.drawImage(img, 240, 110);
@@ -151,7 +161,12 @@ export class BodyComponent implements OnInit, AfterViewInit {
       }
       //Handle 'Click' Event
       else {
-        if(!this.paintMode) this.enterPaintMode(e);        
+        if(!this.paintMode && this.isLogged){
+          this.enterPaintMode(e); 
+        }
+        else if(!this.paintMode && !this.isLogged) {
+          this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        }
       }
     });
 
@@ -174,7 +189,15 @@ export class BodyComponent implements OnInit, AfterViewInit {
     
   }
   ngAfterViewInit(): void {
-
+    //Track log state
+  //   firebase.auth().onAuthStateChanged((user)=> {
+  //     if (user) {
+  //       this.isLogged = true;
+  //     } else {
+  //       this.isLogged = false;
+  //     }
+  //     console.log(user?.uid);
+  //  });
   }
 
 
@@ -344,11 +367,28 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.color = color;
   }
 
+  login() {
+    this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }
+  logout() {
+    this.auth.signOut();
+  }
+
+  checkLogin(): boolean{
+    firebase.auth().onAuthStateChanged((user)=> {
+      if (user) {
+        return true;
+      } else {
+        return false;
+      }
+   });
+   return false;
+  }
+
 }
 
 /**
  * TODO:
- * # Adapt mobile
  * ## Start Backend
  */
 

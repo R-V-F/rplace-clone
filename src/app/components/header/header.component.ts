@@ -13,14 +13,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
-
-  login() {
-    let user = this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-    console.log(user);
-  }
-  logout() {
-    this.auth.signOut();
+    
   }
 
 }
