@@ -2,8 +2,8 @@
 import { AfterViewInit, Component, OnInit} from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/compat/database';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-body',
@@ -47,14 +47,24 @@ export class BodyComponent implements OnInit, AfterViewInit {
   //Check Login
   isLogged:boolean = false;
 
+  //db
+  tutorial: AngularFireObject<any> | undefined;
+  items: Observable<any[]>;
+  first_load = true;
+  first_load_length = 0;
+  prev_load_length = 0;
 
-  constructor(public auth: AngularFireAuth) { 
+
+  constructor(public auth: AngularFireAuth, private db: AngularFireDatabase) { 
+    this.items = db.list('cmds').valueChanges();
   }
-  
-
+  //, private db: AngularFireDatabase
+  ref = this.db.list('cmds');
   
 
   ngOnInit(): void {
+    this.loadInitialState();
+    
     this.auth.onAuthStateChanged((user) => {
       if(user) this.isLogged = true;
       else this.isLogged = false;
@@ -86,6 +96,19 @@ export class BodyComponent implements OnInit, AfterViewInit {
     ctx.fillRect(0,0,1,1);
     ctx.fillRect(500,500,1,1);
     ctx.fillRect(100,100,1,1);
+
+    //db
+    // const ref = this.db.list('cmds');
+    let ref_db = firebase.database().ref('cmds');
+    ref_db.on('child_added', (childSnapshot, prevChildKey) => {
+      console.log(childSnapshot);
+    });
+    // ref.push({ title: 'zkoder Tutorial', url: 'bezkoder.com/zkoder-tutorial' });
+    
+
+
+    // tutRef.set({data: obj.data});
+    
 
     //Guide Setup
     divg!.style.top = document.documentElement.clientHeight * 0.5 + 'px';
@@ -281,6 +304,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
     if(this.paintMode) {
       ctx.fillStyle = this.color; //**Change this -> color pallet
       ctx.fillRect(this.paint_x,this.paint_y,this.brush_size_parent,this.brush_size_parent);
+      this.ref.push({ paint_x: this.paint_x, paint_y: this.paint_y, brush_size: this.brush_size_parent, color: this.color});
     }
   }
 
@@ -383,6 +407,39 @@ export class BodyComponent implements OnInit, AfterViewInit {
       }
    });
    return false;
+  }
+
+  addShit() {
+    this.ref.push({ paint_x: 80, paint_y: 10, brush_size: 10, color: 'black'});
+  }
+
+  loadInitialState() {
+    const canvas : any = document.getElementById('myCanvas');
+    let ctx = canvas.getContext('2d');
+
+    this.items.forEach((dt) => {
+      console.log(dt.length + 'aa');
+      if(this.first_load) {
+        this.first_load_length = dt.length;
+        this.first_load = false;
+        dt.forEach((elem) => {
+          ctx.fillStyle = elem.color;
+          //ctx.fillRect(this.paint_x,this.paint_y,this.brush_size_parent,this.brush_size_parent);
+          ctx.fillRect(elem.paint_x, elem.paint_y, elem.brush_size, elem.brush_size);
+        });
+      }
+      else {
+        let i = 0;
+        dt.forEach((elem) => {
+          if(i == this.prev_load_length) {
+            ctx.fillStyle = elem.color;
+            ctx.fillRect(elem.paint_x, elem.paint_y, elem.brush_size, elem.brush_size);
+          }
+          i++;
+        });
+      }
+      this.prev_load_length = dt.length;
+    });
   }
 
 }
