@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "dist/omegacool-leds",
     "ignore": [
       "firebase.json",
       "**/.*",
