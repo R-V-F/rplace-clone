@@ -1,12 +1,20 @@
-<!-- <div *ngIf="auth.user | async as user; else showLogin">
-    <h1>Hello {{ user.displayName }}!</h1>
-    <button (click)="logout()">Logout</button>
+<div id="log">
+    <div *ngIf="auth.user | async as user; else showLogin">
+        <div id="logged">
+            <!-- <h1>Hello {{ user.displayName }}!</h1> -->
+            <h1 class="orange">Hello!</h1>
+            <button mat-raised-button (click)="logout()">Logout</button>
+        </div>
+    </div>
+    <ng-template #showLogin>
+        <div id="unlogged">
+            <p class="orange">Please login.</p>
+            <button mat-raised-button (click)="login()">Login with Google</button>
+        </div>
+    </ng-template>
 </div>
-<ng-template #showLogin>
-    <p>Please login.</p>
-    <button (click)="login()">Login with Google</button>
-</ng-template>
-<button (click)="addShit()"> check </button> -->
+
+
 <div id="fixed" class="mat-elevation-z9">
     <div id="outer" class="mat-elevation-z9">
         <canvas id="myCanvas" width="1000" height="1000"></canvas>

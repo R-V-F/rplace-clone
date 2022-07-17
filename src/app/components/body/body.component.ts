@@ -55,7 +55,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
   prev_load_length = 0;
 
 
-  constructor(private db: AngularFireDatabase) { 
+  constructor(public auth: AngularFireAuth, private db: AngularFireDatabase) { 
     this.items = db.list('db').valueChanges();
   }
   //, private db: AngularFireDatabase
@@ -66,10 +66,12 @@ export class BodyComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadInitialState();
     
-    // this.auth.onAuthStateChanged((user) => {
-    //   if(user) this.isLogged = true;
-    //   else this.isLogged = false;
-    // });
+    this.auth.onAuthStateChanged((user) => {
+      if(user) {
+        this.isLogged = true;
+      }
+      else this.isLogged = false;
+    });
 
     let img = new Image();
     img.onload = function() {
@@ -188,12 +190,13 @@ export class BodyComponent implements OnInit, AfterViewInit {
         if(!this.paintMode) {
           this.enterPaintMode(e);
         }
-        // if(!this.paintMode && this.isLogged){
-        //   this.enterPaintMode(e); 
-        // }
-        // else if(!this.paintMode && !this.isLogged) {
-        //   this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-        // }
+        if(!this.paintMode && this.isLogged){
+          this.enterPaintMode(e); 
+          
+        }
+        else if(!this.paintMode && !this.isLogged) {
+          this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        }
       }
     });
 
@@ -245,15 +248,17 @@ export class BodyComponent implements OnInit, AfterViewInit {
     const divg = document.getElementById('guideRect');
     const placeit = document.getElementById('placeit');
     const leaveit = document.getElementById('leaveit');
+    const log = document.getElementById('log');
     const canvas : any = document.getElementById('myCanvas');
     this.clickPos = this.getMousePos(canvas,e);
 
 
-    // Makes Guide rect visible
+    // UI
     divg!.style.display ='block';
     divg!.style.border = '1px solid';
     placeit!.style.display = 'block';
     leaveit!.style.display = 'block';
+    log!.style.display = 'none';
 
     this.cx = divg!.offsetLeft; // Updates initial guide rect position
     this.cy = divg!.offsetTop;
@@ -323,12 +328,16 @@ export class BodyComponent implements OnInit, AfterViewInit {
     const div = document.getElementById("outer");
     const placeit = document.getElementById('placeit');
     const leaveit = document.getElementById('leaveit');
+    const log = document.getElementById('log');
 
     if(this.paintMode) {
       this.paintMode = false;
+
       placeit!.style.display = 'none';
       leaveit!.style.display = 'none';
       divg!.style.border = 'none';
+      log!.style.display = 'block';
+
       div!.style.transformOrigin = 'top left';
       div!.style.left = (document.documentElement.clientWidth - 1000)/2 + 'px';
       div!.style.top = '0px';
@@ -405,12 +414,12 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.color = color;
   }
 
-  // login() {
-  //   this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-  // }
-  // logout() {
-  //   this.auth.signOut();
-  // }
+  login() {
+    this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }
+  logout() {
+    this.auth.signOut();
+  }
 
   checkLogin(): boolean{
     firebase.auth().onAuthStateChanged((user)=> {

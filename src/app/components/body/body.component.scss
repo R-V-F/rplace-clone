@@ -67,3 +67,27 @@
 .placeit:hover {
     cursor: pointer;
 }
+
+#logged {
+    position: fixed;
+    top: 5%;
+    left:5%;
+    font-family: monospace;
+    z-index: 3;
+}
+
+#unlogged {
+    z-index: 3;
+    position: fixed;
+    top: 5%;
+    left:5%;
+    font-family: monospace;
+}
+
+h1 {
+    font-family: monospace;
+}
+
+.orange {
+    color: rgb(0, 0, 0);
+}
