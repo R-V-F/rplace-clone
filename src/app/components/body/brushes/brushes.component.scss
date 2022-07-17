@@ -1,8 +1,11 @@
 #brushes-btn {
     position: absolute;
     top:70%;
-    left:70%;
+    left:77%;
     transition: transform .4s ease-in-out;
+    background-color: rgb(66, 66, 66);
+    color: white;
+    font-family: monospace;
 } 
 
 #brushes-btn:hover {
@@ -17,7 +20,7 @@
     top: -365px;
     border: 1px solid;
     border-radius: 10px;
-    background-color: rgb(237, 237, 237);
+    background-color: rgb(107, 107, 107);
     display:flex;
     align-items: flex-start;
     flex-direction: column;

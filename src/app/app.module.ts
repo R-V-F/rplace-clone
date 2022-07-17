@@ -14,6 +14,7 @@ import { SaveComponent } from './components/body/save/save.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environment';
+import { PlaceitComponent } from './components/body/placeit/placeit.component';
 
 
 const firebaseConfig = {
@@ -33,7 +34,8 @@ const firebaseConfig = {
     BrushesComponent,
     PaletteComponent,
     LoadComponent,
-    SaveComponent
+    SaveComponent,
+    PlaceitComponent
   ],
   imports: [
     BrowserModule,

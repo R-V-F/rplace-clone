@@ -55,26 +55,27 @@ export class BodyComponent implements OnInit, AfterViewInit {
   prev_load_length = 0;
 
 
-  constructor(public auth: AngularFireAuth, private db: AngularFireDatabase) { 
-    this.items = db.list('cmds').valueChanges();
+  constructor(private db: AngularFireDatabase) { 
+    this.items = db.list('db').valueChanges();
   }
   //, private db: AngularFireDatabase
-  ref = this.db.list('cmds');
+  //public auth: AngularFireAuth,
+  ref = this.db.list('db');
   
 
   ngOnInit(): void {
     this.loadInitialState();
     
-    this.auth.onAuthStateChanged((user) => {
-      if(user) this.isLogged = true;
-      else this.isLogged = false;
-    });
+    // this.auth.onAuthStateChanged((user) => {
+    //   if(user) this.isLogged = true;
+    //   else this.isLogged = false;
+    // });
 
     let img = new Image();
     img.onload = function() {
-      ctx.drawImage(img, 240, 110);
+      ctx.drawImage(img, 200, 200);
     };
-    img.src = './assets/pepehands.png';
+    img.src = './assets/flower2_21.jpg';
 
 
     //Canvas and Div variables
@@ -91,18 +92,18 @@ export class BodyComponent implements OnInit, AfterViewInit {
     div!.style.left = (document.documentElement.clientWidth - 1000)/2 + 'px';
     ctx.fillStyle = 'white';
     ctx.fillRect(0,0,1000,1000);
-    ctx.fillStyle = 'red';
-    ctx.fillRect(300,200,180,290);
-    ctx.fillRect(0,0,1,1);
-    ctx.fillRect(500,500,1,1);
-    ctx.fillRect(100,100,1,1);
+    // ctx.fillStyle = 'red';
+    // ctx.fillRect(300,200,180,290);
+    // ctx.fillRect(0,0,1,1);
+    // ctx.fillRect(500,500,1,1);
+    // ctx.fillRect(100,100,1,1);
 
     //db
     // const ref = this.db.list('cmds');
-    let ref_db = firebase.database().ref('cmds');
-    ref_db.on('child_added', (childSnapshot, prevChildKey) => {
-      console.log(childSnapshot);
-    });
+    // let ref_db = firebase.database().ref('cmds');
+    // ref_db.on('child_added', (childSnapshot, prevChildKey) => {
+    //   console.log(childSnapshot);
+    // });
     // ref.push({ title: 'zkoder Tutorial', url: 'bezkoder.com/zkoder-tutorial' });
     
 
@@ -184,12 +185,15 @@ export class BodyComponent implements OnInit, AfterViewInit {
       }
       //Handle 'Click' Event
       else {
-        if(!this.paintMode && this.isLogged){
-          this.enterPaintMode(e); 
+        if(!this.paintMode) {
+          this.enterPaintMode(e);
         }
-        else if(!this.paintMode && !this.isLogged) {
-          this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-        }
+        // if(!this.paintMode && this.isLogged){
+        //   this.enterPaintMode(e); 
+        // }
+        // else if(!this.paintMode && !this.isLogged) {
+        //   this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        // }
       }
     });
 
@@ -239,11 +243,17 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.paintMode = true;
     const div = document.getElementById('outer');
     const divg = document.getElementById('guideRect');
+    const placeit = document.getElementById('placeit');
+    const leaveit = document.getElementById('leaveit');
     const canvas : any = document.getElementById('myCanvas');
     this.clickPos = this.getMousePos(canvas,e);
 
+
     // Makes Guide rect visible
+    divg!.style.display ='block';
     divg!.style.border = '1px solid';
+    placeit!.style.display = 'block';
+    leaveit!.style.display = 'block';
 
     this.cx = divg!.offsetLeft; // Updates initial guide rect position
     this.cy = divg!.offsetTop;
@@ -311,9 +321,13 @@ export class BodyComponent implements OnInit, AfterViewInit {
   leavePaintMode() {
     const divg = document.getElementById('guideRect');
     const div = document.getElementById("outer");
+    const placeit = document.getElementById('placeit');
+    const leaveit = document.getElementById('leaveit');
 
     if(this.paintMode) {
       this.paintMode = false;
+      placeit!.style.display = 'none';
+      leaveit!.style.display = 'none';
       divg!.style.border = 'none';
       div!.style.transformOrigin = 'top left';
       div!.style.left = (document.documentElement.clientWidth - 1000)/2 + 'px';
@@ -391,12 +405,12 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.color = color;
   }
 
-  login() {
-    this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-  }
-  logout() {
-    this.auth.signOut();
-  }
+  // login() {
+  //   this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  // }
+  // logout() {
+  //   this.auth.signOut();
+  // }
 
   checkLogin(): boolean{
     firebase.auth().onAuthStateChanged((user)=> {
@@ -440,6 +454,10 @@ export class BodyComponent implements OnInit, AfterViewInit {
       }
       this.prev_load_length = dt.length;
     });
+  }
+
+  fun() {
+
   }
 
 }

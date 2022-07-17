@@ -61,7 +61,7 @@ export class PaletteComponent implements OnInit {
         pos = this.getMousePos(canvas,e);
         let rgb = ctx.getImageData(pos.x, pos.y, 1, 1).data;
         ctx.fillStyle = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
-        ctx.fillRect(80,20,40,10);
+        //ctx.fillRect(80,20,40,10);
         btn!.style.backgroundColor = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
         this.tileColor.emit(`rgb(${rgb[0]},${rgb[1]},${rgb[2]})`);
       }

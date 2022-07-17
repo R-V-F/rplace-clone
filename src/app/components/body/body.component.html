@@ -1,4 +1,4 @@
-<div *ngIf="auth.user | async as user; else showLogin">
+<!-- <div *ngIf="auth.user | async as user; else showLogin">
     <h1>Hello {{ user.displayName }}!</h1>
     <button (click)="logout()">Logout</button>
 </div>
@@ -6,9 +6,7 @@
     <p>Please login.</p>
     <button (click)="login()">Login with Google</button>
 </ng-template>
-<button (click)="addShit()"> check </button>
-
-
+<button (click)="addShit()"> check </button> -->
 <div id="fixed" class="mat-elevation-z9">
     <div id="outer" class="mat-elevation-z9">
         <canvas id="myCanvas" width="1000" height="1000"></canvas>
@@ -18,7 +16,18 @@
     </div>
 
 </div>
+<button mat-raised-button (click)="paintTile()" class="mat-elevation-z9" id="placeit">
+    Place it! <br>
+    (space)
+</button>
+<button mat-raised-button (click)="leavePaintMode()" class="mat-elevation-z9" id="leaveit">
+    Leave<br>
+    (esc)
+</button>
+
+
 <!-- brushSize is @Output -->
 <app-brushes (brushSize)="getBrushSize($event)"></app-brushes>
 <app-palette (tileColor)="getColor($event)"></app-palette>
+
 

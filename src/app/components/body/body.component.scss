@@ -16,6 +16,7 @@
     top: 0;
     left: 0;
     pointer-events: none;
+    display: none;
 }
 
 #ref {
@@ -38,4 +39,31 @@
     position: fixed;
     top: 10%;
     left:5%;
+}
+
+#placeit {
+    position: fixed;
+    text-align: center;
+    left: 43%;
+    top: 77%;
+    border-radius: 10px;
+    width: 15%;
+    height: auto;
+    font-family: monospace;
+    font-size: larger;
+    display: none;
+    
+}
+
+#leaveit {
+    position: fixed;
+    text-align: center;
+    left: 15%;
+    top: 14%;
+    border-radius: 10px;
+    display: none;
+}
+
+.placeit:hover {
+    cursor: pointer;
 }
