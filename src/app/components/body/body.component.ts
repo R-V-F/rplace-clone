@@ -187,9 +187,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
       }
       //Handle 'Click' Event
       else {
-        if(!this.paintMode) {
-          this.enterPaintMode(e);
-        }
         if(!this.paintMode && this.isLogged){
           this.enterPaintMode(e); 
           
