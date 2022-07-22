@@ -18,6 +18,7 @@
 
 
 <h1><span class="grey">></span> Project Structure</h1>
+
 ![project_flow](https://user-images.githubusercontent.com/100313927/180473861-f54a2217-48d6-40a4-a5e7-5bb903cd0d6b.png)
 
 <h1><span class="grey">></span> Challenges</h1>
@@ -27,7 +28,9 @@
     scale of the canvas, while keeping track of where the tiles must be placed.
 </p>
 <h2>Scaling the canvas</h2>
+
 ![scaling](https://user-images.githubusercontent.com/100313927/180474015-50f5378b-a89a-4901-bb32-6c4915f87e11.png)
+
 <br>
 <br>
 <p>
@@ -41,7 +44,9 @@
 </p>
 
 <h2>Positioning the view</h2>
+
 ![positioning](https://user-images.githubusercontent.com/100313927/180474076-5bd7aa13-69b7-4860-b76a-dd881683977a.png)
+
 <br>
 <br>
 <p>
@@ -58,7 +63,9 @@
 </p>
 
 <h2>Aligning the Draw Guide</h2>
+
 ![align1](https://user-images.githubusercontent.com/100313927/180474181-4d2a5281-e8ad-4ade-a834-70926c2c2c1a.png)
+
 <br>
 <br>
 <p>
@@ -69,12 +76,17 @@
     To do so, I divided the canvas into squares with sides equal to the size of the scale. Then, I search for the closest intersection
     relative to the clicked coordinate and defined that as the origin of the drawing guide.
 </p>
+
 ![align_mid](https://user-images.githubusercontent.com/100313927/180474276-c70ec11a-faa3-479b-9d41-25369b880840.png)
+
 ![find_intersection](https://user-images.githubusercontent.com/100313927/180474321-4b00cce9-edda-4915-a151-c681adcace5b.png)
+
 <p>
     Finally, I offset the position by half of the selected brush size times the scale.
 </p>
+
 ![offset mid top](https://user-images.githubusercontent.com/100313927/180474405-e08e8e95-5838-4ef5-8b57-c1a77e49bbbc.png)
+
 ![set guide pos](https://user-images.githubusercontent.com/100313927/180474450-64b66333-b476-4faa-a991-19f3ff64c9a3.png)
 
 <h1><span class="grey">></span> Endnotes</h1>
