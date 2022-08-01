@@ -56,7 +56,11 @@ export class PaletteComponent implements OnInit {
       
     });
 
+    
+    
     canvas?.addEventListener('mousemove', (e:any)=> {
+      //palette is drawn on a canvas,
+      //so the selected color is extracted through mouse positioning -> getImageData
       if(this.show_palette){
         pos = this.getMousePos(canvas,e);
         let rgb = ctx.getImageData(pos.x, pos.y, 1, 1).data;
